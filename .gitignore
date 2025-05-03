@@ -1,0 +1,8 @@
+# Ignore NetBeans and build files
+.idea/
+build/
+dist/
+nbproject/private/
+*.iml
+*.class
+*.log
