@@ -1,6 +1,5 @@
 package Model;
 
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
@@ -23,7 +22,6 @@ public class ThemeManager {
         THEMES.put("IntelliJ Light", FlatIntelliJLaf.class);
         THEMES.put("IntelliJ Dark", FlatDarculaLaf.class);
 
-        
         // Set default theme
         currentTheme = "IntelliJ Light";
     }
@@ -39,7 +37,8 @@ public class ThemeManager {
     public static void setTheme(String themeName) {
         try {
             if (THEMES.containsKey(themeName)) {
-                FlatLaf theme = THEMES.get(themeName).newInstance();
+                // Replace deprecated newInstance() with getDeclaredConstructor().newInstance()
+                FlatLaf theme = THEMES.get(themeName).getDeclaredConstructor().newInstance();
                 FlatLaf.setup(theme);
                 currentTheme = themeName;
                 updateAllFrames();
@@ -48,6 +47,12 @@ public class ThemeManager {
         } catch (Exception ex) {
             System.err.println("Failed to set theme: " + themeName);
             ex.printStackTrace();
+            // Fallback to default theme
+            try {
+                FlatLaf.setup(new FlatIntelliJLaf());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
     
@@ -58,6 +63,7 @@ public class ThemeManager {
         } else {
             setTheme(currentTheme);
         }
+        configureGlobalThemeSettings();
     }
     
     private static void updateAllFrames() {
@@ -67,35 +73,37 @@ public class ThemeManager {
     }
     
     private static void saveThemePreference(String themeName) {
-        // Implement saving to preferences file or database
         Preferences.userRoot().put("theme_preference", themeName);
     }
     
     private static String loadThemePreference() {
-        // Implement loading from preferences file or database
-        return Preferences.userRoot().get("theme_preference", null);
+        return Preferences.userRoot().get("theme_preference", currentTheme);
     }
     
-    // Additional theme customization
     public static void configureGlobalThemeSettings() {
-        // Smooth scrolling
-        UIManager.put("ScrollBar.showButtons", true);
-        UIManager.put("ScrollBar.thumbArc", 999);
-        UIManager.put("ScrollBar.thumbInsets", new Insets(2, 2, 2, 2));
-        
-        // Modern tables
-        UIManager.put("Table.showHorizontalLines", true);
-        UIManager.put("Table.showVerticalLines", true);
-        UIManager.put("Table.gridColor", new Color(0xE0E0E0));
-        
-        // Modern text fields
-        UIManager.put("TextComponent.arc", 5);
-        
-        // Buttons
-        UIManager.put("Button.arc", 5);
-        UIManager.put("Component.focusWidth", 1);
-        
-        // Default font
-        UIManager.put("defaultFont", new Font("Segoe UI", Font.PLAIN, 13));
+        try {
+            // Smooth scrolling
+            UIManager.put("ScrollBar.showButtons", true);
+            UIManager.put("ScrollBar.thumbArc", 999);
+            UIManager.put("ScrollBar.thumbInsets", new Insets(2, 2, 2, 2));
+            
+            // Modern tables
+            UIManager.put("Table.showHorizontalLines", true);
+            UIManager.put("Table.showVerticalLines", true);
+            UIManager.put("Table.gridColor", new Color(0xE0E0E0));
+            
+            // Modern text fields
+            UIManager.put("TextComponent.arc", 5);
+            
+            // Buttons
+            UIManager.put("Button.arc", 5);
+            UIManager.put("Component.focusWidth", 1);
+            
+            // Default font
+            UIManager.put("defaultFont", new Font("Segoe UI", Font.PLAIN, 13));
+        } catch (Exception e) {
+            System.err.println("Failed to configure theme settings");
+            e.printStackTrace();
+        }
     }
 }

@@ -26,12 +26,11 @@ public class ThemeSelectorDialog extends javax.swing.JDialog {
     private JButton cancelButton;
 
     public ThemeSelectorDialog(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
-        initComponents();
         initUI();
     }
 
     private void initUI() {
+        getContentPane().removeAll();
         setTitle("Select Theme");
         setSize(350, 200);
         setLocationRelativeTo(getParent());
