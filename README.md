@@ -6,6 +6,7 @@ A Java-based desktop Attendance Management System built using Swing, MySQL, and 
 
 ```AttendanceSystem/
 ├── 📂 src/
+│ ├── 📄 config.properties
 │ ├── 📂 GUI/
 │ │ ├── 📄 AttendancePanel.java
 │ │ ├── 📄 Dashboard.java
